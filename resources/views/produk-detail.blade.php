@@ -6,8 +6,38 @@
         <p class="mb-2">Stok: {{ $produk->stok }}</p>
         <p class="mb-6 text-sm text-gray-600">Kompatibel: {{ $produk->kompatibilitas_kendaraan ?? '-' }}</p>
 
-        {{-- Tombol beli/overlay keranjang menyusul di step selanjutnya --}}
-        <button class="bg-gray-800 text-white px-6 py-2 rounded">Beli</button>
+        <div x-data="{ open: false }">
+    <button @click="open = true" class="bg-gray-800 text-white px-6 py-2 rounded">Beli</button>
+
+    <div x-show="open" x-cloak class="fixed inset-0 bg-black/50 flex items-center justify-center z-50" style="display: none;">
+        <div @click.outside="open = false" class="bg-white rounded-lg p-6 w-full max-w-md">
+            <h3 class="text-lg font-semibold mb-4">Beli {{ $produk->nama }}</h3>
+
+            <form action="{{ route('keranjang.store') }}" method="POST" class="space-y-4">
+                @csrf
+                <input type="hidden" name="kode_produk" value="{{ $produk->kode }}">
+
+                <div>
+                    <label class="block text-sm font-medium mb-1">Jumlah</label>
+                    <input type="number" name="banyak" value="1" min="1" max="{{ $produk->stok }}" class="w-full border rounded px-3 py-2" required>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium mb-1">Model (opsional)</label>
+                    <input type="text" name="model" class="w-full border rounded px-3 py-2">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium mb-1">Warna (opsional)</label>
+                    <input type="text" name="warna" class="w-full border rounded px-3 py-2">
+                </div>
+
+                <div class="flex gap-2 pt-2">
+                    <button type="submit" class="bg-gray-800 text-white px-4 py-2 rounded flex-1">Tambah ke Keranjang</button>
+                    <button type="button" @click="open = false" class="px-4 py-2 border rounded">Batal</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 
         <h2 class="text-lg font-semibold mt-10 mb-4">Produk Serupa</h2>
         <div class="grid grid-cols-2 md:grid-cols-4 gap-4">

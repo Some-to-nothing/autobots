@@ -9,11 +9,17 @@ use Illuminate\Http\Request;
 class ProdukController extends Controller
 {
     // Daftar semua produk (buat admin kelola)
-    public function index()
-    {
-        $produk = Produk::latest()->paginate(15);
-        return view('admin.produk.index', compact('produk'));
+public function index(Request $request)
+{
+    $query = Produk::latest();
+
+    if ($request->filled('status')) {
+        $query->where('status_approve', $request->status);
     }
+
+    $produk = $query->paginate(15)->withQueryString();
+    return view('admin.produk.index', compact('produk'));
+}
 
     // Form tambah produk baru
     public function create()

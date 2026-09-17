@@ -20,8 +20,33 @@
                     </x-nav-link>
                     @auth
                         @if(Auth::user()->role === 'admin')
-                            <x-nav-link :href="route('admin.produk.index')" :active="request()->routeIs('admin.*')">
+                            <x-nav-link :href="route('admin.produk.index')" :active="request()->routeIs('admin.produk.index') && !request('status')">
                                 {{ __('Kelola Produk') }}
+                            </x-nav-link>
+                        <div class="flex items-center">
+                            <x-dropdown align="left" width="48">
+                                <x-slot name="trigger">
+                                    <button class="inline-flex items-center px-1 pt-1 border-b-2 border-transparent text-sm font-medium leading-5 text-gray-500 hover:text-gray-700 hover:border-gray-300 focus:outline-none transition duration-150 ease-in-out">
+                                        {{ __('Approval') }}
+                                        <svg class="ms-1 h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" /></svg>
+                                    </button>
+                                </x-slot>
+                                <x-slot name="content">
+                                    <x-dropdown-link :href="route('admin.produk.index', ['status' => 'pending'])">
+                                        {{ __('Approve Produk') }}
+                                    </x-dropdown-link>
+                                    <x-dropdown-link :href="route('admin.pesanan.index')">
+                                        {{ __('Konfirmasi Pesanan') }}
+                                    </x-dropdown-link>
+                                </x-slot>
+                            </x-dropdown>
+                        </div>
+                        @else
+                            <x-nav-link :href="route('keranjang.index')" :active="request()->routeIs('keranjang.index')">
+                                {{ __('Keranjang') }}
+                            </x-nav-link>
+                            <x-nav-link :href="route('riwayat.index')" :active="request()->routeIs('riwayat.index')">
+                                {{ __('Riwayat Pesanan') }}
                             </x-nav-link>
                         @endif
                     @endauth
@@ -90,8 +115,21 @@
             </x-responsive-nav-link>
             @auth
                 @if(Auth::user()->role === 'admin')
-                    <x-responsive-nav-link :href="route('admin.produk.index')" :active="request()->routeIs('admin.*')">
+                    <x-responsive-nav-link :href="route('admin.produk.index')" :active="request()->routeIs('admin.produk.index') && !request('status')">
                         {{ __('Kelola Produk') }}
+                    </x-responsive-nav-link>
+                    <x-responsive-nav-link :href="route('admin.produk.index', ['status' => 'pending'])">
+                        {{ __('Approve Produk') }}
+                    </x-responsive-nav-link>
+                    <x-responsive-nav-link :href="route('admin.pesanan.index')">
+                        {{ __('Konfirmasi Pesanan') }}
+                    </x-responsive-nav-link>
+                @else
+                    <x-responsive-nav-link :href="route('keranjang.index')" :active="request()->routeIs('keranjang.index')">
+                        {{ __('Keranjang') }}
+                    </x-responsive-nav-link>
+                    <x-responsive-nav-link :href="route('riwayat.index')" :active="request()->routeIs('riwayat.index')">
+                        {{ __('Riwayat Pesanan') }}
                     </x-responsive-nav-link>
                 @endif
             @endauth
