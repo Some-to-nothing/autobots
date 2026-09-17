@@ -16,4 +16,10 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::patch('produk/{produk}/reject', [ProdukController::class, 'reject'])->name('produk.reject');
 });
 
+Route::get('/dashboard', function () {
+    return auth()->user()->role === 'admin'
+        ? redirect()->route('admin.produk.index')
+        : redirect()->route('landing');
+})->middleware(['auth'])->name('dashboard');
+
 require __DIR__.'/auth.php';
